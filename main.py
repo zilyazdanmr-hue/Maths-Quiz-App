@@ -22,7 +22,7 @@ class MathsQuizApp(App):
     def build(self):
         self.main_layout = FloatLayout()
         self.quiz_finished = False
-
+        self.timer_event = None
         self.matrix_layout = FloatLayout()
         self.main_layout.add_widget(self.matrix_layout)
 
@@ -164,51 +164,24 @@ class MathsQuizApp(App):
 
     def Lesson(self, instance):
         def hide_buttons():
-            buttons = [
-                Root, Square, Cube, Area, Polygon,
-                Fractions, Decimals, Percentages, Integers,
-                Factors, Multiples, Prime_Numbers, LCM, HCF,
-                Ratio_Missing, Ratio_Simplest, Proportion, Average, 
-                Profit_Loss, Simple_Interest, Speed, Distance, Time,
-                Algebra, Linear_Equations, Exponents,
-                Order_of_Operations, Perimeter, Volume,
-                Triangles, Quadrilaterals, Circles, Angles,
-                Coordinates, Probability, Statistics, Patterns,
-                Sequences, Cos, Sec, Cosec, Tan, Cot, Sin , 
-                Natural_Sum, Odd_Sum, Even_Sum,
-                Cube_Root_Trick, Square_Identities,
-                Calculus, Pythagoras,
-                Circle_Perimeter, Circle_Area, 
-                Rational_Numbers, Quadratic_Equations,
-                Congruence_of_Triangles, Laws_of_Exponents,
-                Algebraic_Identities, Factorization_Algebraic_Expressions,
-                Polynomials, Arithmetic_Progressions,
-                Euclidean_Geometry, Similarity_of_Triangles,
-                Areas_Parallelograms_Triangles, Circle_Chords_Arcs,
-                Surface_Area_Cubes_Cuboids, Surface_Area_Cylinders_Cones,
-                Volume_Cylinders_Cones_Spheres, Herons_Formula,
-                Trigonometric_Ratios, Trigonometric_Identities,
-                Heights_and_Distances, Statistics_Mean_Median_Mode,
-                Grouped_Data_Frequency_Tables, Probability_Compound_Events,
-                Permutations_Combinations, Profit_Loss_Discount,
-                Compound_Interest, Tax_Financial_Mathematics,
-                Speed_Distance_Relative_Speed, Time_and_Work,
-                Pipes_and_Cisterns, Ratio_Proportion_Word_Problems,
-                Mixtures_Alligation, Unitary_Method,
-                Percentage_Applications, HCF_LCM_Word_Problems,
-                Decimal_Fraction_Word_Problems, Rational_Algebraic_Expressions,
-                Linear_Inequalities, Graphs_Linear_Equations,
-                Systems_Linear_Equations, Symmetry_Transformations,
-                Construction_Geometric_Figures, Angle_Properties_Theorems,
-                Polygons_Interior_Angles, Mathematical_Reasoning,
-                Data_Interpretation, Number_Theory_Divisibility,
-                Mathematical_Word_Problems,
-                Back, Back2
-            ]
-
-            for button in buttons:
+            for button in lesson_buttons:
                 if button.parent:
                     lesson_layout.remove_widget(button)
+
+            for button in [search, Back, Back2]:
+                if button.parent:
+                    lesson_layout.remove_widget(button)
+            
+        def search_lessons(instance, value):
+            query = value.strip().lower()
+
+            for button in lesson_buttons:
+                if button.parent:
+                    lesson_layout.remove_widget(button)
+
+            for button in lesson_buttons:
+                if query in button.text.lower():
+                    lesson_layout.add_widget(button)
 
 
         def show_lesson(explanation):
@@ -235,7 +208,6 @@ class MathsQuizApp(App):
         lesson_layout.bind(
             minimum_height=lesson_layout.setter("height")
         )
-
 
         Root = Button(
             text="Root",
@@ -952,6 +924,55 @@ class MathsQuizApp(App):
             height = 45,
             color = "black"
         )
+        
+        search = TextInput(
+            hint_text="Search lessons...",
+            multiline=False,
+            size_hint_y=None,
+            height=50,
+            font_size=18
+        )
+
+        lesson_buttons = [
+            Root, Square, Cube, Area, Polygon,
+            Fractions, Decimals, Percentages, Integers,
+            Factors, Multiples, Prime_Numbers, LCM, HCF,
+            Ratio_Missing, Ratio_Simplest, Proportion, Average,
+            Profit_Loss, Simple_Interest, Speed, Distance, Time,
+            Algebra, Linear_Equations, Exponents,
+            Order_of_Operations, Perimeter, Volume,
+            Triangles, Quadrilaterals, Circles, Angles,
+            Coordinates, Probability, Statistics, Patterns,
+            Sequences, Cos, Sec, Cosec, Tan, Cot, Sin,
+            Natural_Sum, Odd_Sum, Even_Sum,
+            Cube_Root_Trick, Square_Identities,
+            Calculus, Pythagoras,
+            Circle_Perimeter, Circle_Area,
+            Rational_Numbers, Quadratic_Equations,
+            Congruence_of_Triangles, Laws_of_Exponents,
+            Algebraic_Identities, Factorization_Algebraic_Expressions,
+            Polynomials, Arithmetic_Progressions,
+            Euclidean_Geometry, Similarity_of_Triangles,
+            Areas_Parallelograms_Triangles, Circle_Chords_Arcs,
+            Surface_Area_Cubes_Cuboids, Surface_Area_Cylinders_Cones,
+            Volume_Cylinders_Cones_Spheres, Herons_Formula,
+            Trigonometric_Ratios, Trigonometric_Identities,
+            Heights_and_Distances, Statistics_Mean_Median_Mode,
+            Grouped_Data_Frequency_Tables, Probability_Compound_Events,
+            Permutations_Combinations, Profit_Loss_Discount,
+            Compound_Interest, Tax_Financial_Mathematics,
+            Speed_Distance_Relative_Speed, Time_and_Work,
+            Pipes_and_Cisterns, Ratio_Proportion_Word_Problems,
+            Mixtures_Alligation, Unitary_Method,
+            Percentage_Applications, HCF_LCM_Word_Problems,
+            Decimal_Fraction_Word_Problems, Rational_Algebraic_Expressions,
+            Linear_Inequalities, Graphs_Linear_Equations,
+            Systems_Linear_Equations, Symmetry_Transformations,
+            Construction_Geometric_Figures, Angle_Properties_Theorems,
+            Polygons_Interior_Angles, Mathematical_Reasoning,
+            Data_Interpretation, Number_Theory_Divisibility,
+            Mathematical_Word_Problems
+        ]
 
         def r(instance):
             RE = Label(
@@ -1717,333 +1738,842 @@ class MathsQuizApp(App):
             )
             show_lesson(text)
 
-        def Rational(self, instance):
-            self.show_topic(
-                "Rational Numbers",
-                "Rational numbers can be written as p/q, where p and q are integers and q is not zero.\n\nExamples: 1/2, -3/4, 5"
+        def Rational(instance):
+            text = Label(
+                text=(
+                    "RATIONAL NUMBERS\n\n"
+                    "A rational number can be written as p/q, where q is not zero.\n\n"
+                    "Example:\n"
+                    "1/2 + 1/4 = 3/4"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Quadratic(self, instance):
-            self.show_topic(
-                "Quadratic Equations",
-                "A quadratic equation has the highest power of the variable as 2.\n\nStandard form: ax² + bx + c = 0"
+
+        def Quadratic(instance):
+            text = Label(
+                text=(
+                    "QUADRATIC EQUATIONS\n\n"
+                    "A quadratic equation has the form ax² + bx + c = 0, where a is not zero.\n\n"
+                    "Example:\n"
+                    "x² - 5x + 6 = 0\n"
+                    "(x - 2)(x - 3) = 0\n"
+                    "Answer: x = 2 or x = 3"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Congruence(self, instance):
-            self.show_topic(
-                "Congruence of Triangles",
-                "Two triangles are congruent when they have the same shape and size.\n\nRules include SSS, SAS, ASA and RHS."
+
+        def Congruence(instance):
+            text = Label(
+                text=(
+                    "CONGRUENCE OF TRIANGLES\n\n"
+                    "Congruent triangles have the same shape and size.\n"
+                    "Rules include SSS, SAS, ASA, AAS and RHS.\n\n"
+                    "Example:\n"
+                    "Equal corresponding sides and angles prove congruence."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Laws(self, instance):
-            self.show_topic(
-                "Laws of Exponents",
-                "Important laws:\naᵐ × aⁿ = aᵐ⁺ⁿ\naᵐ ÷ aⁿ = aᵐ⁻ⁿ\n(aᵐ)ⁿ = aᵐⁿ"
+
+        def Laws(instance):
+            text = Label(
+                text=(
+                    "LAWS OF EXPONENTS\n\n"
+                    "Important laws:\n"
+                    "aᵐ × aⁿ = aᵐ⁺ⁿ\n"
+                    "aᵐ ÷ aⁿ = aᵐ⁻ⁿ\n"
+                    "(aᵐ)ⁿ = aᵐⁿ\n\n"
+                    "Example:\n"
+                    "2³ × 2² = 2⁵ = 32"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Identities(self, instance):
-            self.show_topic(
-                "Algebraic Identities",
-                "(a + b)² = a² + 2ab + b²\n(a - b)² = a² - 2ab + b²\na² - b² = (a + b)(a - b)"
+
+        def Identities(instance):
+            text = Label(
+                text=(
+                    "ALGEBRAIC IDENTITIES\n\n"
+                    "Important identities:\n"
+                    "(a+b)² = a²+2ab+b²\n"
+                    "a²-b² = (a+b)(a-b)\n\n"
+                    "Example:\n"
+                    "(x+3)² = x²+6x+9"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Factorization(self, instance):
-            self.show_topic(
-                "Factorization of Algebraic Expressions",
-                "Factorization means writing an expression as a product of its factors.\n\nExample: x² + 5x + 6 = (x + 2)(x + 3)"
+
+        def Factorization(instance):
+            text = Label(
+                text=(
+                    "FACTORIZATION OF ALGEBRAIC EXPRESSIONS\n\n"
+                    "Factorization means writing an expression as a product of factors.\n\n"
+                    "Example:\n"
+                    "x² + 5x + 6 = (x+2)(x+3)"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Polynomial(self, instance):
-            self.show_topic(
-                "Polynomials",
-                "A polynomial is an expression containing variables and coefficients with non-negative whole-number powers.\n\nExample: 3x² + 2x + 5"
+
+        def Polynomial(instance):
+            text = Label(
+                text=(
+                    "POLYNOMIALS\n\n"
+                    "A polynomial is an expression made from variables, constants and non-negative integer powers.\n\n"
+                    "Example:\n"
+                    "2x² + 3x + 1 is a polynomial."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Progression(self, instance):
-            self.show_topic(
-                "Arithmetic Progressions",
-                "An arithmetic progression is a sequence where the difference between consecutive terms is constant.\n\nExample: 2, 5, 8, 11"
+
+        def Progression(instance):
+            text = Label(
+                text=(
+                    "ARITHMETIC PROGRESSIONS\n\n"
+                    "An arithmetic progression has a constant common difference.\n\n"
+                    "Example:\n"
+                    "2, 5, 8, 11 has common difference 3."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Euclidean(self, instance):
-            self.show_topic(
-                "Euclidean Geometry",
-                "Euclidean geometry studies points, lines, angles, shapes and geometric properties on a flat surface."
+
+        def Euclidean(instance):
+            text = Label(
+                text=(
+                    "EUCLIDEAN GEOMETRY\n\n"
+                    "Euclidean geometry studies points, lines, angles, shapes and geometric properties.\n\n"
+                    "Example:\n"
+                    "The angles of a triangle add up to 180°."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Similarity(self, instance):
-            self.show_topic(
-                "Similarity of Triangles",
-                "Similar triangles have the same shape but not necessarily the same size.\n\nTheir corresponding angles are equal and corresponding sides are proportional."
+
+        def Similarity(instance):
+            text = Label(
+                text=(
+                    "SIMILARITY OF TRIANGLES\n\n"
+                    "Similar triangles have equal corresponding angles and proportional corresponding sides.\n\n"
+                    "Example:\n"
+                    "Triangles with the same shape are similar."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Areas(self, instance):
-            self.show_topic(
-                "Areas of Parallelograms and Triangles",
-                "Area of a parallelogram = base × height\n\nArea of a triangle = 1/2 × base × height"
+
+        def Areas(instance):
+            text = Label(
+                text=(
+                    "AREAS OF PARALLELOGRAMS AND TRIANGLES\n\n"
+                    "Area of a parallelogram = base × height.\n"
+                    "Area of a triangle = 1/2 × base × height.\n\n"
+                    "Example:\n"
+                    "Base = 8 cm, height = 5 cm\n"
+                    "Triangle area = 20 cm²"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Chords(self, instance):
-            self.show_topic(
-                "Circle Chords and Arcs",
-                "A chord is a line segment joining two points on a circle.\n\nAn arc is a part of the circumference of a circle."
+
+        def Chords(instance):
+            text = Label(
+                text=(
+                    "CIRCLE CHORDS AND ARCS\n\n"
+                    "A chord joins two points on a circle. An arc is a part of the circumference.\n\n"
+                    "Example:\n"
+                    "A diameter is the longest chord of a circle."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def CubeArea(self, instance):
-            self.show_topic(
-                "Surface Area of Cubes and Cuboids",
-                "Surface area of a cube = 6a²\n\nTotal surface area of a cuboid = 2(lw + lh + wh)"
+
+        def CubeArea(instance):
+            text = Label(
+                text=(
+                    "SURFACE AREA OF CUBES AND CUBOIDS\n\n"
+                    "Cube total surface area = 6a².\n"
+                    "Cuboid total surface area = 2(lb + bh + lh).\n\n"
+                    "Example:\n"
+                    "Cube side = 3 cm\n"
+                    "Surface area = 54 cm²"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def CylinderArea(self, instance):
-            self.show_topic(
-                "Surface Area of Cylinders and Cones",
-                "Curved surface area of a cylinder = 2πrh\n\nThe surface area of a cone depends on its radius and slant height."
+
+        def CylinderArea(instance):
+            text = Label(
+                text=(
+                    "SURFACE AREA OF CYLINDERS AND CONES\n\n"
+                    "Cylinder curved surface area = 2πrh.\n"
+                    "Cone curved surface area = πrl.\n\n"
+                    "Example:\n"
+                    "Use radius, height and slant height in the formulas."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def SolidVolume(self, instance):
-            self.show_topic(
-                "Volume of Cylinders, Cones and Spheres",
-                "Volume of a cylinder = πr²h\n\nVolume of a cone = 1/3πr²h\n\nVolume of a sphere = 4/3πr³"
+
+        def SolidVolume(instance):
+            text = Label(
+                text=(
+                    "VOLUME OF CYLINDERS, CONES AND SPHERES\n\n"
+                    "Cylinder volume = πr²h.\n"
+                    "Cone volume = 1/3πr²h.\n"
+                    "Sphere volume = 4/3πr³.\n\n"
+                    "Example:\n"
+                    "Cylinder radius = 2 cm, height = 5 cm\n"
+                    "Volume = 20π cm³"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Heron(self, instance):
-            self.show_topic(
-                "Heron's Formula",
-                "Heron's formula calculates the area of a triangle using its three sides.\n\nArea = √(s(s-a)(s-b)(s-c))"
+
+        def Heron(instance):
+            text = Label(
+                text=(
+                    "HERON'S FORMULA\n\n"
+                    "Heron's formula finds the area of a triangle using its three sides.\n"
+                    "s = (a+b+c)/2\n"
+                    "Area = √(s(s-a)(s-b)(s-c))\n\n"
+                    "Example:\n"
+                    "Sides 3 cm, 4 cm and 5 cm give area 6 cm²."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def TrigRatios(self, instance):
-            self.show_topic(
-                "Trigonometric Ratios",
-                "sin θ = Opposite / Hypotenuse\ncos θ = Adjacent / Hypotenuse\ntan θ = Opposite / Adjacent"
+
+        def TrigRatios(instance):
+            text = Label(
+                text=(
+                    "TRIGONOMETRIC RATIOS\n\n"
+                    "sin θ = opposite/hypotenuse\n"
+                    "cos θ = adjacent/hypotenuse\n"
+                    "tan θ = opposite/adjacent\n\n"
+                    "Example:\n"
+                    "For a right triangle, use the sides relative to the angle."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def TrigIdentities(self, instance):
-            self.show_topic(
-                "Trigonometric Identities",
-                "Important identity:\n\nsin²θ + cos²θ = 1\n\ntan θ = sin θ / cos θ"
+
+        def TrigIdentities(instance):
+            text = Label(
+                text=(
+                    "TRIGONOMETRIC IDENTITIES\n\n"
+                    "Important identity:\n"
+                    "sin²θ + cos²θ = 1\n"
+                    "tan θ = sin θ/cos θ\n\n"
+                    "Example:\n"
+                    "If sin θ = 3/5, then cos θ = 4/5 for an acute angle."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Heights(self, instance):
-            self.show_topic(
-                "Heights and Distances",
-                "Heights and distances use trigonometric ratios to calculate unknown lengths and angles in right-angled triangles."
+
+        def Heights(instance):
+            text = Label(
+                text=(
+                    "HEIGHTS AND DISTANCES\n\n"
+                    "Heights and distances use trigonometric ratios to find unknown lengths.\n\n"
+                    "Example:\n"
+                    "Use tan θ = height/distance when opposite and adjacent sides are involved."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def StatisticsMean(self, instance):
-            self.show_topic(
-                "Statistics: Mean, Median and Mode",
-                "Mean = Sum of values / Number of values\n\nMedian is the middle value.\n\nMode is the most frequently occurring value."
+
+        def StatisticsMean(instance):
+            text = Label(
+                text=(
+                    "STATISTICS: MEAN, MEDIAN AND MODE\n\n"
+                    "Mean = sum of values/number of values.\n"
+                    "Median is the middle value.\n"
+                    "Mode is the most frequent value.\n\n"
+                    "Example:\n"
+                    "2, 3, 3, 4, 8\n"
+                    "Mean = 4, Median = 3, Mode = 3"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def GroupedData(self, instance):
-            self.show_topic(
-                "Grouped Data and Frequency Tables",
-                "Grouped data is organized into class intervals.\n\nA frequency table shows how often values or groups occur."
+
+        def GroupedData(instance):
+            text = Label(
+                text=(
+                    "GROUPED DATA AND FREQUENCY TABLES\n\n"
+                    "Grouped data organizes values into class intervals with frequencies.\n\n"
+                    "Example:\n"
+                    "A frequency table shows how often each class interval occurs."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def CompoundProbability(self, instance):
-            self.show_topic(
-                "Probability of Compound Events",
-                "Compound probability involves two or more events.\n\nFor independent events, multiply their probabilities when finding the probability that both occur."
+
+        def CompoundProbability(instance):
+            text = Label(
+                text=(
+                    "PROBABILITY OF COMPOUND EVENTS\n\n"
+                    "Compound probability deals with two or more events.\n\n"
+                    "Example:\n"
+                    "For independent events, P(A and B) = P(A) × P(B)."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Permutations(self, instance):
-            self.show_topic(
-                "Permutations and Combinations",
-                "Permutations involve arrangements where order matters.\n\nCombinations involve selections where order does not matter."
+
+        def Permutations(instance):
+            text = Label(
+                text=(
+                    "PERMUTATIONS AND COMBINATIONS\n\n"
+                    "Permutations arrange objects in order.\n"
+                    "Combinations select objects without considering order.\n\n"
+                    "Example:\n"
+                    "Arrangements use permutations; selections use combinations."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Discount(self, instance):
-            self.show_topic(
-                "Profit, Loss and Discount",
-                "Profit = Selling Price - Cost Price\n\nLoss = Cost Price - Selling Price\n\nDiscount = Marked Price - Selling Price"
+
+        def Discount(instance):
+            text = Label(
+                text=(
+                    "PROFIT, LOSS AND DISCOUNT\n\n"
+                    "Profit = selling price - cost price.\n"
+                    "Loss = cost price - selling price.\n"
+                    "Discount = marked price - selling price.\n\n"
+                    "Example:\n"
+                    "Marked price ₹500, selling price ₹450\n"
+                    "Discount = ₹50"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def CompoundInterest(self, instance):
-            self.show_topic(
-                "Compound Interest",
-                "Compound interest is calculated on the principal and accumulated interest.\n\nAmount = P(1 + R/100)ⁿ"
+
+        def CompoundInterest(instance):
+            text = Label(
+                text=(
+                    "COMPOUND INTEREST\n\n"
+                    "Compound interest is calculated on the principal plus accumulated interest.\n\n"
+                    "Example:\n"
+                    "Amount = P(1 + R/100)ⁿ"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Tax(self, instance):
-            self.show_topic(
-                "Tax and Financial Mathematics",
-                "Tax is an amount added to the price of goods or services.\n\nTax = Tax rate × Original amount / 100"
+
+        def Tax(instance):
+            text = Label(
+                text=(
+                    "TAX AND FINANCIAL MATHEMATICS\n\n"
+                    "Financial mathematics includes tax, discounts, interest and money calculations.\n\n"
+                    "Example:\n"
+                    "Tax = taxable amount × tax rate/100"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def RelativeSpeed(self, instance):
-            self.show_topic(
-                "Speed, Distance and Relative Speed",
-                "Speed = Distance / Time\n\nWhen two objects move in opposite directions, their relative speed is the sum of their speeds."
+
+        def RelativeSpeed(instance):
+            text = Label(
+                text=(
+                    "SPEED, DISTANCE AND RELATIVE SPEED\n\n"
+                    "Speed = distance/time.\n"
+                    "Relative speed depends on the direction of motion.\n\n"
+                    "Example:\n"
+                    "Distance = 120 km, time = 3 hours\n"
+                    "Speed = 40 km/h"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Work(self, instance):
-            self.show_topic(
-                "Time and Work",
-                "Work rate = 1 / Time taken\n\nWhen people work together, their work rates can be added."
+
+        def Work(instance):
+            text = Label(
+                text=(
+                    "TIME AND WORK\n\n"
+                    "Work rate tells how much work is completed per unit of time.\n\n"
+                    "Example:\n"
+                    "If a person completes work in 5 days, one-day work = 1/5."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Pipes(self, instance):
-            self.show_topic(
-                "Pipes and Cisterns",
-                "Pipes can fill or empty a tank.\n\nFilling pipes add work rate, while emptying pipes subtract work rate."
+
+        def Pipes(instance):
+            text = Label(
+                text=(
+                    "PIPES AND CISTERNS\n\n"
+                    "Pipes and cisterns use work-rate calculations for filling and emptying tanks.\n\n"
+                    "Example:\n"
+                    "A pipe filling 1/4 of a tank per hour fills it in 4 hours."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def RatioProblems(self, instance):
-            self.show_topic(
-                "Ratio and Proportion Word Problems",
-                "A ratio compares quantities.\n\nA proportion states that two ratios are equal."
+
+        def RatioProblems(instance):
+            text = Label(
+                text=(
+                    "RATIO AND PROPORTION WORD PROBLEMS\n\n"
+                    "A ratio compares quantities. A proportion states that two ratios are equal.\n\n"
+                    "Example:\n"
+                    "2:3 = 4:6"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Mixtures(self, instance):
-            self.show_topic(
-                "Mixtures and Alligation",
-                "Mixtures combine two or more quantities.\n\nAlligation helps calculate the ratio in which different items should be mixed."
+
+        def Mixtures(instance):
+            text = Label(
+                text=(
+                    "MIXTURES AND ALLIGATION\n\n"
+                    "Alligation helps calculate the ratio in which two ingredients should be mixed.\n\n"
+                    "Example:\n"
+                    "Use differences from the mean price to find the mixing ratio."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Unitary(self, instance):
-            self.show_topic(
-                "Unitary Method",
-                "The unitary method finds the value of one unit first and then uses it to calculate the required value."
+
+        def Unitary(instance):
+            text = Label(
+                text=(
+                    "UNITARY METHOD\n\n"
+                    "The unitary method finds the value of one unit before finding the required quantity.\n\n"
+                    "Example:\n"
+                    "5 pens cost ₹50.\n"
+                    "1 pen costs ₹10.\n"
+                    "8 pens cost ₹80."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def PercentApplications(self, instance):
-            self.show_topic(
-                "Percentage Applications",
-                "Percentage = Part / Whole × 100\n\nPercentages are used in discounts, profit, loss, tax and marks."
+
+        def PercentApplications(instance):
+            text = Label(
+                text=(
+                    "PERCENTAGE APPLICATIONS\n\n"
+                    "Percentage means per hundred.\n\n"
+                    "Example:\n"
+                    "20% of 150 = 20/100 × 150 = 30"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def HCFProblems(self, instance):
-            self.show_topic(
-                "HCF and LCM Word Problems",
-                "HCF is the greatest common factor.\n\nLCM is the least common multiple.\n\nBoth are useful for solving number-based word problems."
+
+        def HCFProblems(instance):
+            text = Label(
+                text=(
+                    "HCF AND LCM WORD PROBLEMS\n\n"
+                    "HCF is the greatest common factor. LCM is the least common multiple.\n\n"
+                    "Example:\n"
+                    "HCF of 12 and 18 = 6.\n"
+                    "LCM of 12 and 18 = 36."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def DecimalProblems(self, instance):
-            self.show_topic(
-                "Decimal and Fraction Word Problems",
-                "Fractions represent parts of a whole.\n\nDecimals are another way to represent fractions using a decimal point."
+
+        def DecimalProblems(instance):
+            text = Label(
+                text=(
+                    "DECIMAL AND FRACTION WORD PROBLEMS\n\n"
+                    "Decimals and fractions can represent the same quantity.\n\n"
+                    "Example:\n"
+                    "0.75 = 75/100 = 3/4"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def RationalAlgebra(self, instance):
-            self.show_topic(
-                "Rational Algebraic Expressions",
-                "A rational algebraic expression is a fraction containing algebraic expressions.\n\nExample: (x + 2) / (x + 3)"
+
+        def RationalAlgebra(instance):
+            text = Label(
+                text=(
+                    "RATIONAL ALGEBRAIC EXPRESSIONS\n\n"
+                    "Rational algebraic expressions contain fractions with algebraic expressions.\n\n"
+                    "Example:\n"
+                    "(x² - 9)/(x - 3) = x + 3, when x ≠ 3."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Inequalities(self, instance):
-            self.show_topic(
-                "Linear Inequalities",
-                "A linear inequality compares expressions using symbols such as <, >, ≤ and ≥.\n\nExample: 2x + 3 > 7"
+
+        def Inequalities(instance):
+            text = Label(
+                text=(
+                    "LINEAR INEQUALITIES\n\n"
+                    "Linear inequalities use symbols such as <, >, ≤ and ≥.\n\n"
+                    "Example:\n"
+                    "2x + 3 > 7\n"
+                    "2x > 4\n"
+                    "x > 2"
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def LinearGraphs(self, instance):
-            self.show_topic(
-                "Graphs of Linear Equations",
-                "A linear equation can be represented by a straight line on a coordinate graph.\n\nExample: y = 2x + 1"
+
+        def LinearGraphs(instance):
+            text = Label(
+                text=(
+                    "GRAPHS OF LINEAR EQUATIONS\n\n"
+                    "A linear equation in two variables forms a straight line when graphed.\n\n"
+                    "Example:\n"
+                    "y = 2x + 1 is a linear equation."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Systems(self, instance):
-            self.show_topic(
-                "Systems of Linear Equations",
-                "A system of linear equations contains two or more equations with common variables.\n\nThe solution satisfies all equations."
+
+        def Systems(instance):
+            text = Label(
+                text=(
+                    "SYSTEMS OF LINEAR EQUATIONS\n\n"
+                    "A system contains two or more linear equations solved together.\n\n"
+                    "Example:\n"
+                    "x + y = 5 and x - y = 1 give x = 3 and y = 2."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Symmetry(self, instance):
-            self.show_topic(
-                "Symmetry and Transformations",
-                "Symmetry means that a shape has matching parts.\n\nTransformations include translation, rotation, reflection and enlargement."
+
+        def Symmetry(instance):
+            text = Label(
+                text=(
+                    "SYMMETRY AND TRANSFORMATIONS\n\n"
+                    "Symmetry means a shape remains balanced under a reflection or transformation.\n\n"
+                    "Example:\n"
+                    "A square has four lines of symmetry."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Construction(self, instance):
-            self.show_topic(
-                "Construction of Geometric Figures",
-                "Geometric constructions use tools such as a ruler and compass to create accurate lines, angles and shapes."
+
+        def Construction(instance):
+            text = Label(
+                text=(
+                    "CONSTRUCTION OF GEOMETRIC FIGURES\n\n"
+                    "Geometric constructions use a ruler and compass to create accurate figures.\n\n"
+                    "Example:\n"
+                    "A perpendicular bisector divides a line segment into two equal parts."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def AngleProperties(self, instance):
-            self.show_topic(
-                "Angle Properties and Theorems",
-                "Angles on a straight line add up to 180°.\n\nAngles around a point add up to 360°.\n\nVertically opposite angles are equal."
+
+        def AngleProperties(instance):
+            text = Label(
+                text=(
+                    "ANGLE PROPERTIES AND THEOREMS\n\n"
+                    "Angles on a straight line add to 180°.\n"
+                    "Angles around a point add to 360°.\n\n"
+                    "Example:\n"
+                    "If one angle on a straight line is 70°, the other is 110°."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def PolygonAngles(self, instance):
-            self.show_topic(
-                "Polygons and Interior Angles",
-                "The sum of the interior angles of a polygon with n sides is:\n\n(n - 2) × 180°"
+
+        def PolygonAngles(instance):
+            text = Label(
+                text=(
+                    "POLYGON INTERIOR ANGLES\n\n"
+                    "The sum of interior angles of an n-sided polygon is (n-2) × 180°.\n\n"
+                    "Example:\n"
+                    "A pentagon has interior angle sum 540°."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Reasoning(self, instance):
-            self.show_topic(
-                "Mathematical Reasoning",
-                "Mathematical reasoning uses logical steps, statements and evidence to solve problems and reach conclusions."
+
+        def Reasoning(instance):
+            text = Label(
+                text=(
+                    "MATHEMATICAL REASONING\n\n"
+                    "Mathematical reasoning uses statements, logic and evidence to reach conclusions.\n\n"
+                    "Example:\n"
+                    "A valid conclusion must follow from the given facts."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def DataInterpretation(self, instance):
-            self.show_topic(
-                "Data Interpretation",
-                "Data interpretation involves reading and analyzing tables, graphs, charts and diagrams to answer questions."
+
+        def DataInterpretation(instance):
+            text = Label(
+                text=(
+                    "DATA INTERPRETATION\n\n"
+                    "Data interpretation means reading and analyzing tables, charts and graphs.\n\n"
+                    "Example:\n"
+                    "Compare values in a bar graph to answer questions."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def Divisibility(self, instance):
-            self.show_topic(
-                "Number Theory and Divisibility",
-                "Divisibility rules help determine whether a number can be divided exactly by another number."
+
+        def Divisibility(instance):
+            text = Label(
+                text=(
+                    "NUMBER THEORY AND DIVISIBILITY\n\n"
+                    "Divisibility rules help determine whether one number divides another exactly.\n\n"
+                    "Example:\n"
+                    "A number divisible by 2 ends in 0, 2, 4, 6 or 8."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
 
+            show_lesson(text)
 
-        def WordProblems(self, instance):
-            self.show_topic(
-                "Mathematical Word Problems",
-                "Word problems describe real-life situations using mathematics.\n\nRead carefully, identify the known values and choose the correct operation or formula."
+
+        def WordProblems(instance):
+            text = Label(
+                text=(
+                    "MATHEMATICAL WORD PROBLEMS\n\n"
+                    "Word problems convert real-life situations into mathematical expressions and equations.\n\n"
+                    "Example:\n"
+                    "Read the information, identify the unknown and solve step by step."
+                ),
+                font_size=18,
+                color=(0, 1, 0, 1),
+                size_hint_y=None,
+                height=400
             )
+
+            show_lesson(text)
+
+
 
         Root.bind(on_press=r)
         Square.bind(on_press=s)
@@ -2147,7 +2677,9 @@ class MathsQuizApp(App):
         Mathematical_Word_Problems.bind(on_press=WordProblems)
         Back.bind(on_press=self.home)
         Back2.bind(on_press=self.Lesson)
+        search.bind(text=search_lessons)
 
+        lesson_layout.add_widget(search)
         lesson_layout.add_widget(Back)
         lesson_layout.add_widget(Back2)
         lesson_layout.add_widget(Root)
@@ -2321,8 +2853,7 @@ class MathsQuizApp(App):
                 "Decimals", "Percentages", "Factors",
                 "Multiples", "Prime Numbers", "LCM", "HCF",
                 "Average", "Perimeter", "Triangles",
-                "Angles", "Patterns", "Sequences",
-                "Natural Numbers","Whole Numbers"
+                "Angles", "Patterns", "Sequences"
             ]
 
         elif self.selected_class in [7, 8]:
@@ -2334,11 +2865,8 @@ class MathsQuizApp(App):
                 "Exponents", "Order of Operations", "Perimeter",
                 "Volume", "Triangles", "Quadrilaterals", "Angles",
                 "Coordinates", "Probability", "Patterns", "Sequences",
-                "Circles", "Circle Perimeter", "Circle Area","Rational Numbers",
-                "Profit and Loss","Comparing Quantities",
-                "Direct and Inverse Proportion","Squares and Square Roots",
-                "Cubes and Cube Roots","Data Handling",
-                "Symmetry"
+                "Circles", "Circle Perimeter", "Circle Area",
+                "Rational Numbers", "Symmetry and Transformations"
             ]
 
         else:
@@ -2355,24 +2883,45 @@ class MathsQuizApp(App):
                 "Coordinates", "Probability", "Statistics",
                 "Patterns", "Sequences", "Sine", "Cosine",
                 "Tangent", "Cosecant", "Secant", "Cotangent",
-                "Calculus","Algebraic Equations","Cube Root Trick",
-                "Sum of Odd Numbers","Sum of Even Numbers",
-                "Sum of Natural Numbers","Pythagoras","Number Systems",
-                "Rational Numbers","Irrational Numbers",
-                "Real Numbers","Polynomials",
-                "Linear Equations in Two Variables",
-                "Quadratic Equations","Arithmetic Progressions",
-                "Euclidean Geometry","Congruence of Triangles",
-                "Similarity of Triangles","Areas of Parallelograms and Triangles",
-                "Surface Areas and Volumes","Heron's Formula",
-                "Pythagoras Theorem","Trigonometric Ratios",
-                "Trigonometric Identities","Heights and Distances","Mean, Median and Mode",
-                "Financial Mathematics","Compound Interest",
-                "Tax and Percentage Applications","Linear Inequalities",
-                "Factorization","Algebraic Identities",
-                "Systems of Linear Equations","Permutations and Combinations",
-                "Mathematical Reasoning","Data Interpretation",
-                "Number Theory"
+                "Calculus", "Algebraic Equations", "Cube Root Trick",
+                "Sum of Odd Numbers", "Sum of Even Numbers",
+                "Sum of Natural Numbers", "Pythagoras",
+                "Rational Numbers", "Polynomials",
+                "Quadratic Equations", "Arithmetic Progressions",
+                "Euclidean Geometry", "Congruence of Triangles",
+                "Similarity of Triangles",
+                "Areas of Parallelograms and Triangles",
+                "Heron's Formula",
+                "Trigonometric Ratios", "Trigonometric Identities",
+                "Heights and Distances",
+                "Statistics: Mean, Median and Mode",
+                "Grouped Data and Frequency Tables",
+                "Probability of Compound Events",
+                "Permutations and Combinations",
+                "Profit, Loss and Discount",
+                "Compound Interest",
+                "Tax and Financial Mathematics",
+                "Speed, Distance and Relative Speed",
+                "Time and Work",
+                "Pipes and Cisterns",
+                "Ratio and Proportion Word Problems",
+                "Mixtures and Alligation",
+                "Unitary Method in Real-Life Problems",
+                "Percentage Applications",
+                "HCF and LCM Word Problems",
+                "Decimal and Fraction Word Problems",
+                "Rational Algebraic Expressions",
+                "Linear Inequalities",
+                "Graphs of Linear Equations",
+                "Systems of Linear Equations",
+                "Symmetry and Transformations",
+                "Construction of Geometric Figures",
+                "Angle Properties and Theorems",
+                "Polygons and Interior Angles",
+                "Mathematical Reasoning",
+                "Data Interpretation",
+                "Number Theory and Divisibility",
+                "Mathematical Word Problems"
             ]
 
         topic = random.choice(topics)
@@ -2540,9 +3089,16 @@ class MathsQuizApp(App):
             self.question.text = f"Cost = {cost}, Selling Price = {selling}. Profit = ?"
 
         elif topic == "Simple Interest":
-            p = random.choice([100, 200, 500, 1000])
-            r = random.choice([5, 10])
-            t = random.choice([1, 2, 3])
+            while True:
+                p = random.choice([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])
+                r = random.choice([5, 6, 7, 8, 9, 10])
+                t = random.choice([1, 2, 3, 4, 5])
+
+                values = (p, r, t)
+
+                if values not in self.used_si_values:
+                    self.used_si_values.add(values)
+                    break
 
             self.correct_answer = (p * r * t) / 100
             self.question.text = f"Find SI: P={p}, R={r}%, T={t} years."
@@ -3364,6 +3920,7 @@ class MathsQuizApp(App):
 
         self.page_layout.add_widget(layout)
 
+        self.used_si_values = set()
         self.new_question()
         self.start_timer()
         
